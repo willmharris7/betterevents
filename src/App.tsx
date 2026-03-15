@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import './App.css'
+import Grid from '@mui/material/Grid'
 
 interface Event {
   href: string
@@ -34,20 +34,22 @@ function App() {
   return (
     <>
       <Button variant="contained" onClick={handleClick}>Hello World!!</Button>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+      <Grid container spacing={2}>
         {output.map((event, i) => (
-          <Card key={i} sx={{ backgroundColor: 'black', color: 'white', flex: '1 1 300px' }}>
-            <CardContent>
-              {event.img && <img src={event.img} style={{ width: '350px', height: '200px', objectFit: 'cover' }} />}
-              <p>{event.title}</p>
-              {event.time && <p>{event.time}</p>}
-              {event.group && <p>{event.group}</p>}
-              {event.attendees && <p>Attendees: {event.attendees}</p>}
-              <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
-            </CardContent>
-          </Card>
+          <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Card>
+              <CardContent>
+                {event.img && <img src={event.img} style={{ width: '350px', height: '200px', objectFit: 'cover' }} />}
+                <p>{event.title}</p>
+                {event.time && <p>{event.time}</p>}
+                {event.group && <p>{event.group}</p>}
+                {event.attendees && <p>Attendees: {event.attendees}</p>}
+                <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </>
   )
 }
