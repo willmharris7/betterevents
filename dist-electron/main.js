@@ -37,8 +37,8 @@ app.on("activate", () => {
     createWindow();
   }
 });
-ipcMain.handle("fetch-example", async () => {
-  const res = await fetch("https://example.com");
+ipcMain.handle("fetch-example", async (_event, url) => {
+  const res = await fetch(url);
   return await res.text();
 });
 app.whenReady().then(createWindow);

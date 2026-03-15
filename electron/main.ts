@@ -65,8 +65,8 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('fetch-example', async () => {
-  const res = await fetch('https://example.com')
+ipcMain.handle('fetch-example', async (_event, url: string) => {
+  const res = await fetch(url)
   return await res.text()
 })
 
