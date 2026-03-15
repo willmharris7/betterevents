@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
 import './App.css'
 
 function App() {
@@ -14,14 +16,19 @@ function App() {
   }
 
   return (
-    <div>
+    <>
       <Button variant="contained" onClick={handleClick}>Hello World!!</Button>
-      <div>{output.map((href, i) => (
-        <div key={i}>
-          <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', href) }}>Link</a>
-        </div>
-      ))}</div>
-    </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
+        {output.map((href, i) => (
+          <Card key={i} sx={{ backgroundColor: 'black', color: 'white', flex: '1 1 300px' }}>
+            <CardContent>
+              <p>Example title</p>
+              <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', href) }}>Link</a>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </>
   )
 }
 
