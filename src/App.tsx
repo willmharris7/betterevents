@@ -5,9 +5,14 @@ import './App.css'
 function App() {
   const [output, setOutput] = useState('unclicked')
 
+  async function handleClick() {
+    const html = await window.ipcRenderer.invoke('fetch-example')
+    setOutput(html)
+  }
+
   return (
     <div>
-      <Button variant="contained" onClick={() => setOutput('clicked')}>Hello World!!</Button>
+      <Button variant="contained" onClick={handleClick}>Hello World!!</Button>
       <div>{output}</div>
     </div>
   )
