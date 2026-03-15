@@ -1,7 +1,14 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { ipcMain, shell, app, BrowserWindow } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+function customFunctions() {
+  ipcMain.handle("open-external", (_event, url) => shell.openExternal(url));
+  ipcMain.handle("fetch-example", async (_event, url) => {
+    const res = await fetch(url);
+    return await res.text();
+  });
+}
 createRequire(import.meta.url);
 const __dirname$1 = path.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = path.join(__dirname$1, "..");
@@ -37,10 +44,7 @@ app.on("activate", () => {
     createWindow();
   }
 });
-ipcMain.handle("fetch-example", async (_event, url) => {
-  const res = await fetch(url);
-  return await res.text();
-});
+customFunctions();
 app.whenReady().then(createWindow);
 export {
   MAIN_DIST,

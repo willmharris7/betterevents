@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow } from 'electron'
+import { customFunctions } from './custom-functions/customFunctions'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -65,9 +66,6 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('fetch-example', async (_event, url: string) => {
-  const res = await fetch(url)
-  return await res.text()
-})
+customFunctions()
 
 app.whenReady().then(createWindow)
