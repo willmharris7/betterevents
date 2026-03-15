@@ -8,6 +8,9 @@ interface Event {
   href: string
   title: string
   img: string
+  time: string
+  group: string
+  attendees: string
 }
 
 function App() {
@@ -21,6 +24,9 @@ function App() {
       href: (a as HTMLAnchorElement).href,
       title: a.querySelector('h3')?.textContent ?? '',
       img: a.querySelector('img')?.src ?? '',
+      time: a.querySelector('time')?.textContent ?? '',
+      group: a.querySelector('div.flex-shrink.min-w-0.truncate')?.textContent ?? '',
+      attendees: a.querySelector('span.ds2-m14.py-ds2-8')?.textContent ?? '',
     }))
     setOutput(events)
   }
@@ -34,6 +40,9 @@ function App() {
             <CardContent>
               {event.img && <img src={event.img} style={{ width: '350px', height: '200px', objectFit: 'cover' }} />}
               <p>{event.title}</p>
+              {event.time && <p>{event.time}</p>}
+              {event.group && <p>{event.group}</p>}
+              {event.attendees && <p>Attendees: {event.attendees}</p>}
               <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
             </CardContent>
           </Card>
