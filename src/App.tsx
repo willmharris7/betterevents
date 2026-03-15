@@ -7,6 +7,7 @@ import './App.css'
 interface Event {
   href: string
   title: string
+  img: string
 }
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
     const events = Array.from(doc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
       href: (a as HTMLAnchorElement).href,
       title: a.querySelector('h3')?.textContent ?? '',
+      img: a.querySelector('img')?.src ?? '',
     }))
     setOutput(events)
   }
@@ -30,6 +32,7 @@ function App() {
         {output.map((event, i) => (
           <Card key={i} sx={{ backgroundColor: 'black', color: 'white', flex: '1 1 300px' }}>
             <CardContent>
+              {event.img && <img src={event.img} style={{ width: '350px', height: '200px', objectFit: 'cover' }} />}
               <p>{event.title}</p>
               <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
             </CardContent>
