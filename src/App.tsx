@@ -3,6 +3,7 @@ import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
 
 interface Event {
   href: string
@@ -39,7 +40,7 @@ function App() {
           <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card>
               <CardContent>
-                {event.img && <img src={event.img} style={{ width: '350px', height: '200px', objectFit: 'cover' }} />}
+                {event.img && <Box component="img" src={event.img} sx={{ width: '350px', height: '200px', objectFit: 'cover' }} />}
                 <p>{event.title}</p>
                 {event.time && <p>{event.time}</p>}
                 {event.group && <p>{event.group}</p>}
