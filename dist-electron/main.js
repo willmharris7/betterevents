@@ -4,7 +4,11 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 function customFunctions() {
   ipcMain.handle("open-external", (_event, url) => shell.openExternal(url));
-  ipcMain.handle("fetch-example", async (_event, url) => {
+  ipcMain.handle("fetchMeetup", async (_event, url) => {
+    const res = await fetch(url);
+    return await res.text();
+  });
+  ipcMain.handle("fetchEventbrite", async (_event, url) => {
     const res = await fetch(url);
     return await res.text();
   });

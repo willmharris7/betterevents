@@ -8,35 +8,40 @@ const EventImage = styled('img')({
   objectFit: 'cover',
 })
 
-interface Event {
-  href: string
-  title: string
-  img: string
-  time: string
-  group: string
-  attendees: string
-}
+interface Event { href: string; title: string; img: string; time: string; group: string; attendees: string; price: string }
 
 function App() {
   const [state, setState] = useImmer({
-    output: [] as Event[],
-    url: 'https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=2026-03-21T03%3A00%3A00-04%3A00&customEndDate=2026-03-22T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles',
+    meetupResults: [] as Event[],
+    eventbriteResults: [] as Event[],
+    eventbriteTest: "Test output",
+    meetupURL: 'https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=2026-03-21T03%3A00%3A00-04%3A00&customEndDate=2026-03-22T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles',
+    eventbriteURL: 'https://www.eventbrite.com/d/or--portland/all-events/?page=1&start_date=2026-03-21&end_date=2026-03-21',
     checkboxes: { meetup: true, eventbrite: true },
   })
 
   async function getEvents() {
-    if (!state.checkboxes.meetup) return
-    const html = await window.ipcRenderer.invoke('fetch-example', state.url)
-    const doc = new DOMParser().parseFromString(html, 'text/html')
-    const events = Array.from(doc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
-      href: (a as HTMLAnchorElement).href,
-      title: a.querySelector('h3')?.textContent ?? '',
-      img: a.querySelector('img')?.src ?? '',
-      time: a.querySelector('time')?.textContent ?? '',
-      group: a.querySelector('div.flex-shrink.min-w-0.truncate')?.textContent ?? '',
-      attendees: a.querySelector('span.ds2-m14.py-ds2-8')?.textContent ?? '',
-    }))
-    setState(draft => { draft.output = events })
+    if (state.checkboxes.meetup) {
+      const meetupHtml = await window.ipcRenderer.invoke('fetchMeetup', state.meetupURL)
+      const doc = new DOMParser().parseFromString(meetupHtml, 'text/html')
+      const events = Array.from(doc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
+        href: (a as HTMLAnchorElement).href,
+        title: a.querySelector('h3')?.textContent ?? '',
+        img: a.querySelector('img')?.src ?? '',
+        time: a.querySelector('time')?.textContent ?? '',
+        group: a.querySelector('div.flex-shrink.min-w-0.truncate')?.textContent ?? '',
+        attendees: a.querySelector('span.ds2-m14.py-ds2-8')?.textContent ?? '',
+        price: ''
+      }))
+      setState(draft => { draft.meetupResults = events })
+    }
+
+    if (state.checkboxes.eventbrite) {
+      const eventbriteHtml = await window.ipcRenderer.invoke('fetchEventbrite', state.eventbriteURL)
+      setState(draft => {draft.eventbriteTest = eventbriteHtml})
+    }
+
+    
   }
 
   return (
@@ -48,7 +53,7 @@ function App() {
       </Stack>
       <Divider/>
       <Grid container spacing={2}>
-        {state.output.map((event, i) => (
+        {state.meetupResults.map((event, i) => (
           <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card>
               <CardContent>
@@ -65,7 +70,7 @@ function App() {
       </Grid>
       <Divider/>
       <Grid container spacing={2}>
-
+        <div>{state.eventbriteTest}</div>
       </Grid>
     </>
   )
