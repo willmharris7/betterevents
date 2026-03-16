@@ -1,6 +1,10 @@
 import { useImmer } from 'use-immer'
 import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs, { Dayjs } from 'dayjs'
 
 const EventImage = styled('img')({
   width: '375px',
@@ -55,6 +59,11 @@ function App() {
 
   return (
     <>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Stack direction="row" spacing={2} sx={{ p: 1 }}>
+          <DatePicker label="Date" value={dayjs(state.date)} onChange={(value: Dayjs | null) => { if (value) setState(draft => { draft.date = value.format('YYYY-MM-DD') }) }}/>
+        </Stack>
+      </LocalizationProvider>
       <Stack direction="row" spacing={2}>
         <Button variant="contained" onClick={getEvents}>Get Events</Button>
         <FormControlLabel control={<Checkbox checked={state.checkboxes.meetup} onChange={() => setState(draft => { draft.checkboxes.meetup = !draft.checkboxes.meetup })} />} label="Meetup" />
