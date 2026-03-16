@@ -2,9 +2,12 @@ import { useImmer } from 'use-immer'
 import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
 
 const EventImage = styled('img')({
   width: '375px',
@@ -20,7 +23,7 @@ function App() {
     eventbriteResults: [] as Event[],
     checkboxes: { meetup: true, eventbrite: true },
     date: '2026-03-21',
-    time: ''
+    time: '00:00'
   })
 
   async function getEvents() {
@@ -53,15 +56,14 @@ function App() {
       }))
       setState(draft => { draft.eventbriteResults = eventbriteEvents })
     }
-
-    
   }
 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack direction="row" spacing={2} sx={{ p: 1 }}>
-          <DatePicker label="Date" value={dayjs(state.date)} onChange={(value: Dayjs | null) => { if (value) setState(draft => { draft.date = value.format('YYYY-MM-DD') }) }}/>
+          <DatePicker label="Date" value={dayjs(state.date)} onChange={(value: Dayjs | null) => {setState(draft => { draft.date = value ? value.format('YYYY-MM-DD') : '' }) }}/>
+          <TimePicker label="Time" value={dayjs(state.time, 'HH:mm')} onChange={(value: Dayjs | null) => { setState(draft => { draft.time = value ? value.format('HH:mm') : '' }) }}/>
         </Stack>
       </LocalizationProvider>
       <Stack direction="row" spacing={2}>
