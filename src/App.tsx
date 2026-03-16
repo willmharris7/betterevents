@@ -14,7 +14,6 @@ function App() {
   const [state, setState] = useImmer({
     meetupResults: [] as Event[],
     eventbriteResults: [] as Event[],
-    eventbriteTest: "Test output",
     meetupURL: 'https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=2026-03-21T03%3A00%3A00-04%3A00&customEndDate=2026-03-22T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles',
     eventbriteURL: 'https://www.eventbrite.com/d/or--portland/all-events/?page=1&start_date=2026-03-21&end_date=2026-03-21',
     checkboxes: { meetup: true, eventbrite: true },
@@ -23,8 +22,8 @@ function App() {
   async function getEvents() {
     if (state.checkboxes.meetup) {
       const meetupHtml = await window.ipcRenderer.invoke('fetchMeetup', state.meetupURL)
-      const doc = new DOMParser().parseFromString(meetupHtml, 'text/html')
-      const events = Array.from(doc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
+      const meetupDoc = new DOMParser().parseFromString(meetupHtml, 'text/html')
+      const meetupEvents = Array.from(meetupDoc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
         href: (a as HTMLAnchorElement).href,
         title: a.querySelector('h3')?.textContent ?? '',
         img: a.querySelector('img')?.src ?? '',
@@ -33,12 +32,22 @@ function App() {
         attendees: a.querySelector('span.ds2-m14.py-ds2-8')?.textContent ?? '',
         price: ''
       }))
-      setState(draft => { draft.meetupResults = events })
+      setState(draft => { draft.meetupResults = meetupEvents })
     }
 
     if (state.checkboxes.eventbrite) {
       const eventbriteHtml = await window.ipcRenderer.invoke('fetchEventbrite', state.eventbriteURL)
-      setState(draft => {draft.eventbriteTest = eventbriteHtml})
+      const eventbriteDoc = new DOMParser().parseFromString(eventbriteHtml, 'text/html')
+      const eventbriteEvents = Array.from(eventbriteDoc.querySelectorAll('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]')).map(a => ({
+        href: '',
+        title: a.querySelector('h3')?.textContent ?? '',
+        img: '',
+        time: '',
+        group: '',
+        attendees: '',
+        price: ''
+      }))
+      setState(draft => { draft.eventbriteResults = eventbriteEvents })
     }
 
     
@@ -70,7 +79,15 @@ function App() {
       </Grid>
       <Divider/>
       <Grid container spacing={2}>
-        <div>{state.eventbriteTest}</div>
+        {state.eventbriteResults.map((event, i) => (
+          <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Card>
+              <CardContent>
+                <p>{event.title}</p>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </>
   )
