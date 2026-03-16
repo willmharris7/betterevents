@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useImmer } from 'use-immer'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -25,13 +25,12 @@ interface Event {
 }
 
 function App() {
-  const [output, setOutput] = useState<Event[]>([])
-  const [url] = useState('https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=2026-03-21T03%3A00%3A00-04%3A00&customEndDate=2026-03-22T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles')
-  const [meetupChecked, setMeetupChecked] = useState(true)
-  const [eventbriteChecked, setEvenbriteChecked] = useState(true)
+  const [output, setOutput] = useImmer<Event[]>([])
+  const [url] = useImmer('https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=2026-03-21T03%3A00%3A00-04%3A00&customEndDate=2026-03-22T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles')
+  const [sources, setSources] = useImmer({ meetup: true, eventbrite: true })
 
   async function getEvents() {
-    if (!meetupChecked) return
+    if (!sources.meetup) return
     const html = await window.ipcRenderer.invoke('fetch-example', url)
     const doc = new DOMParser().parseFromString(html, 'text/html')
     const events = Array.from(doc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
@@ -49,8 +48,8 @@ function App() {
     <>
       <Stack direction="row" spacing={2}>
         <Button variant="contained" onClick={getEvents}>Get Events</Button>
-        <FormControlLabel control={<Checkbox checked={meetupChecked} onChange={() => setMeetupChecked(v => !v)} />} label="Meetup" />
-        <FormControlLabel control={<Checkbox checked={eventbriteChecked} onChange={() => setEvenbriteChecked(v => !v)} />} label="Eventbrite" />
+        <FormControlLabel control={<Checkbox checked={sources.meetup} onChange={() => setSources(d => { d.meetup = !d.meetup })} />} label="Meetup" />
+        <FormControlLabel control={<Checkbox checked={sources.eventbrite} onChange={() => setSources(d => { d.eventbrite = !d.eventbrite })} />} label="Eventbrite" />
       </Stack>
       <Divider/>
       <Grid container spacing={2}>
