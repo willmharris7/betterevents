@@ -10,7 +10,20 @@ function customFunctions() {
     const nextDay = currentDay.toISOString().split("T")[0];
     const meetupURL = `https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=${date}T03%3A00%3A00-04%3A00&customEndDate=${nextDay}T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles`;
     const res = await fetch(meetupURL);
-    return await res.text();
+    const meetupHTML = await res.text();
+    const meetupDoc = new DOMParser().parseFromString(meetupHTML, "text/html");
+    return Array.from(meetupDoc.querySelectorAll('a[data-event-label="Event Card"]')).map((a) => {
+      var _a, _b, _c, _d, _e;
+      return {
+        href: a.href,
+        title: ((_a = a.querySelector("h3")) == null ? void 0 : _a.textContent) ?? "",
+        img: ((_b = a.querySelector("img")) == null ? void 0 : _b.src) ?? "",
+        time: ((_c = a.querySelector("time")) == null ? void 0 : _c.textContent) ?? "",
+        group: ((_d = a.querySelector("div.flex-shrink.min-w-0.truncate")) == null ? void 0 : _d.textContent) ?? "",
+        attendees: ((_e = a.querySelector("span.ds2-m14.py-ds2-8")) == null ? void 0 : _e.textContent) ?? "",
+        price: ""
+      };
+    });
   });
   ipcMain.handle("fetchEventbrite", async (_event, date, time) => {
     const eventbriteURL = `https://www.eventbrite.com/d/or--portland/all-events/?page=1&start_date=${date}&end_date=${date}`;

@@ -28,18 +28,8 @@ function App() {
 
   async function getEvents() {
     if (state.checkboxes.meetup) {
-      const meetupHtml = await window.ipcRenderer.invoke('fetchMeetup', state.date, state.time)
-      const meetupDoc = new DOMParser().parseFromString(meetupHtml, 'text/html')
-      const meetupEvents = Array.from(meetupDoc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
-        href: (a as HTMLAnchorElement).href,
-        title: a.querySelector('h3')?.textContent ?? '',
-        img: a.querySelector('img')?.src ?? '',
-        time: a.querySelector('time')?.textContent ?? '',
-        group: a.querySelector('div.flex-shrink.min-w-0.truncate')?.textContent ?? '',
-        attendees: a.querySelector('span.ds2-m14.py-ds2-8')?.textContent ?? '',
-        price: ''
-      }))
-      setState(draft => { draft.meetupResults = meetupEvents })
+      const meetupFetchResponse = await window.ipcRenderer.invoke('fetchMeetup', state.date, state.time)
+      setState(draft => { draft.meetupResults = meetupFetchResponse })
     }
 
     if (state.checkboxes.eventbrite) {
