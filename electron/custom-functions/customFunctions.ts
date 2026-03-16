@@ -28,12 +28,12 @@ export function customFunctions() {
       // Given time inputs "Sat, Mar 21 · 6:00 PM PDT" and "Monthly · Sat, Mar 21 · 10:00 AM PDT"
       const cardTimeAMPM = card.time.split(' · ').pop()?.split(' PDT')[0] // produces "6:00 PM"
       const cardTimeDDHH = dayjs(cardTimeAMPM, "hh:mm A").format("HH:mm")
-      return cardTimeDDHH > filterTime
+      return cardTimeDDHH >= filterTime
     })
     return meetupCardDataFiltered
   })
 
-  ipcMain.handle('fetchEventbrite', async (_event, date: string, time: string) => {
+  ipcMain.handle('fetchEventbrite', async (_event, date: string, filterTime: string) => {
     const eventbriteURL = `https://www.eventbrite.com/d/or--portland/all-events/?page=1&start_date=${date}&end_date=${date}`
     const win = new BrowserWindow({ show: false })
     await win.loadURL(eventbriteURL)
@@ -41,7 +41,7 @@ export function customFunctions() {
     const eventbriteHTML = await win.webContents.executeJavaScript('document.documentElement.outerHTML')
     win.destroy()
     const $ = cheerio.load(eventbriteHTML)
-    return $('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]').map((_i, div) => ({
+    const eventbriteCardData = $('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]').map((_i, div) => ({
         href: $(div).find('a').attr('href'),
         title: $(div).find('h3').text(),
         img: $(div).find('img').attr('src'),
@@ -50,5 +50,13 @@ export function customFunctions() {
         attendees: '',
         price: $(div).find('p[style="--TypographyColor: #3a3247;"]').text(),
     })).toArray()
+    const eventbriteCardDataFiltered = eventbriteCardData.filter(card => {
+      const cardTimeAMPM = card.time.split('•')[1]
+      console.log(cardTimeAMPM)
+      const cardTimeDDHH = dayjs(cardTimeAMPM, "hh:mm A").format("HH:mm")
+      console.log(cardTimeDDHH)
+      return cardTimeDDHH >= filterTime
+    })
+    return eventbriteCardDataFiltered
   })
 }
