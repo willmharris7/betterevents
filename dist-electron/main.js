@@ -1,4 +1,4 @@
-import { ipcMain, shell, app, BrowserWindow } from "electron";
+import { ipcMain, shell, BrowserWindow, app } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -9,8 +9,12 @@ function customFunctions() {
     return await res.text();
   });
   ipcMain.handle("fetchEventbrite", async (_event, url) => {
-    const res = await fetch(url);
-    return await res.text();
+    const win2 = new BrowserWindow({ show: false });
+    await win2.loadURL(url);
+    await new Promise((resolve) => setTimeout(resolve, 6e3));
+    const html = await win2.webContents.executeJavaScript("document.documentElement.outerHTML");
+    win2.destroy();
+    return html;
   });
 }
 createRequire(import.meta.url);
