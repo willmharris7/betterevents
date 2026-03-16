@@ -3,7 +3,7 @@ import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Chec
 import { styled } from '@mui/material/styles'
 
 const EventImage = styled('img')({
-  width: '350px',
+  width: '375px',
   height: '200px',
   objectFit: 'cover',
 })
@@ -38,14 +38,14 @@ function App() {
     if (state.checkboxes.eventbrite) {
       const eventbriteHtml = await window.ipcRenderer.invoke('fetchEventbrite', state.eventbriteURL)
       const eventbriteDoc = new DOMParser().parseFromString(eventbriteHtml, 'text/html')
-      const eventbriteEvents = Array.from(eventbriteDoc.querySelectorAll('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]')).map(a => ({
-        href: '',
-        title: a.querySelector('h3')?.textContent ?? '',
-        img: '',
-        time: '',
+      const eventbriteEvents = Array.from(eventbriteDoc.querySelectorAll('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]')).map(div => ({
+        href: div.querySelector('a')?.href ?? '',
+        title: div.querySelector('h3')?.textContent ?? '',
+        img: div.querySelector('img')?.src ?? '',
+        time: div.querySelector('p[class="Typography_root__487rx #585163 Typography_body-md__487rx event-card__clamp-line--one Typography_align-match-parent__487rx"]')?.textContent ?? '',
         group: '',
         attendees: '',
-        price: ''
+        price: div.querySelector('p[style="--TypographyColor: #3a3247;"]')?.textContent ?? ''
       }))
       setState(draft => { draft.eventbriteResults = eventbriteEvents })
     }
@@ -83,7 +83,11 @@ function App() {
           <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card>
               <CardContent>
+                {event.img && <EventImage src={event.img} />}
                 <p>{event.title}</p>
+                {event.time && <p>{event.time}</p>}
+                {event.price&& <p>{event.price}</p>}
+                <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
               </CardContent>
             </Card>
           </Grid>
