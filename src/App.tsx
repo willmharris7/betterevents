@@ -1,12 +1,5 @@
 import { useImmer } from 'use-immer'
-import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Grid from '@mui/material/Grid'
-import Divider from '@mui/material/Divider'
-import Stack from '@mui/material/Stack'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
+import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 const EventImage = styled('img')({
