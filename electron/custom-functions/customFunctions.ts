@@ -1,10 +1,13 @@
 import { ipcMain, shell, BrowserWindow } from 'electron'
 import * as cheerio from 'cheerio'
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 export function customFunctions() {
   ipcMain.handle('open-external', (_event, url: string) => shell.openExternal(url))
 
-  ipcMain.handle('fetchMeetup', async (_event, date: string, time: string) => {
+  ipcMain.handle('fetchMeetup', async (_event, date: string, filterTime: string) => {
     const currentDay = new Date(date)
     currentDay.setDate(currentDay.getDate() + 1)
     const nextDay = currentDay.toISOString().split('T')[0]
@@ -12,7 +15,7 @@ export function customFunctions() {
     const res = await fetch(meetupURL)
     const meetupHTML = await res.text()
     const $ = cheerio.load(meetupHTML)
-    return $('a[data-event-label="Event Card"]').map((_i, a) => ({
+    const meetupCardData = $('a[data-event-label="Event Card"]').map((_i, a) => ({
         href: $(a).attr('href'),
         title: $(a).find('h3').text(),
         img: $(a).find('img').attr('src'),
@@ -21,6 +24,13 @@ export function customFunctions() {
         attendees: $(a).find('span.ds2-m14.py-ds2-8').text(),
         price: ''
     })).toArray()
+    const meetupCardDataFiltered = meetupCardData.filter(card => {
+      // Given time inputs "Sat, Mar 21 · 6:00 PM PDT" and "Monthly · Sat, Mar 21 · 10:00 AM PDT"
+      const cardTimeAMPM = card.time.split(' · ').pop()?.split(' PDT')[0] // produces "6:00 PM"
+      const cardTimeDDHH = dayjs(cardTimeAMPM, "hh:mm A").format("HH:mm")
+      return cardTimeDDHH > filterTime
+    })
+    return meetupCardDataFiltered
   })
 
   ipcMain.handle('fetchEventbrite', async (_event, date: string, time: string) => {
