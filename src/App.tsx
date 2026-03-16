@@ -14,14 +14,14 @@ function App() {
   const [state, setState] = useImmer({
     meetupResults: [] as Event[],
     eventbriteResults: [] as Event[],
-    meetupURL: 'https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=2026-03-21T03%3A00%3A00-04%3A00&customEndDate=2026-03-22T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles',
-    eventbriteURL: 'https://www.eventbrite.com/d/or--portland/all-events/?page=1&start_date=2026-03-21&end_date=2026-03-21',
     checkboxes: { meetup: true, eventbrite: true },
+    date: '2026-03-21',
+    time: ''
   })
 
   async function getEvents() {
     if (state.checkboxes.meetup) {
-      const meetupHtml = await window.ipcRenderer.invoke('fetchMeetup', state.meetupURL)
+      const meetupHtml = await window.ipcRenderer.invoke('fetchMeetup', state.date, state.time)
       const meetupDoc = new DOMParser().parseFromString(meetupHtml, 'text/html')
       const meetupEvents = Array.from(meetupDoc.querySelectorAll('a[data-event-label="Event Card"]')).map(a => ({
         href: (a as HTMLAnchorElement).href,
@@ -36,7 +36,7 @@ function App() {
     }
 
     if (state.checkboxes.eventbrite) {
-      const eventbriteHtml = await window.ipcRenderer.invoke('fetchEventbrite', state.eventbriteURL)
+      const eventbriteHtml = await window.ipcRenderer.invoke('fetchEventbrite', state.date, state.time)
       const eventbriteDoc = new DOMParser().parseFromString(eventbriteHtml, 'text/html')
       const eventbriteEvents = Array.from(eventbriteDoc.querySelectorAll('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]')).map(div => ({
         href: div.querySelector('a')?.href ?? '',

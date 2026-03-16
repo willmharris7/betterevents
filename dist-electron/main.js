@@ -4,13 +4,18 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 function customFunctions() {
   ipcMain.handle("open-external", (_event, url) => shell.openExternal(url));
-  ipcMain.handle("fetchMeetup", async (_event, url) => {
-    const res = await fetch(url);
+  ipcMain.handle("fetchMeetup", async (_event, date, time) => {
+    const currentDay = new Date(date);
+    currentDay.setDate(currentDay.getDate() + 1);
+    const nextDay = currentDay.toISOString().split("T")[0];
+    const meetupURL = `https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=${date}T03%3A00%3A00-04%3A00&customEndDate=${nextDay}T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles`;
+    const res = await fetch(meetupURL);
     return await res.text();
   });
-  ipcMain.handle("fetchEventbrite", async (_event, url) => {
+  ipcMain.handle("fetchEventbrite", async (_event, date, time) => {
+    const eventbriteURL = `https://www.eventbrite.com/d/or--portland/all-events/?page=1&start_date=${date}&end_date=${date}`;
     const win2 = new BrowserWindow({ show: false });
-    await win2.loadURL(url);
+    await win2.loadURL(eventbriteURL);
     await new Promise((resolve) => setTimeout(resolve, 6e3));
     const html = await win2.webContents.executeJavaScript("document.documentElement.outerHTML");
     win2.destroy();
