@@ -33,9 +33,14 @@ let win;
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    show: false,
     webPreferences: {
       preload: path.join(__dirname$1, "preload.mjs")
     }
+  });
+  win.once("ready-to-show", () => {
+    win == null ? void 0 : win.maximize();
+    win == null ? void 0 : win.show();
   });
   win.webContents.on("did-finish-load", () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
