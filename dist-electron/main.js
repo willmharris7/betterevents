@@ -41647,9 +41647,18 @@ function customFunctions() {
     const win2 = new BrowserWindow({ show: false });
     await win2.loadURL(eventbriteURL);
     await new Promise((resolve) => setTimeout(resolve, 6e3));
-    const html2 = await win2.webContents.executeJavaScript("document.documentElement.outerHTML");
+    const eventbriteHTML = await win2.webContents.executeJavaScript("document.documentElement.outerHTML");
     win2.destroy();
-    return html2;
+    const $2 = load(eventbriteHTML);
+    return $2('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]').map((_i2, div) => ({
+      href: $2(div).find("a").attr("href"),
+      title: $2(div).find("h3").text(),
+      img: $2(div).find("img").attr("src"),
+      time: $2(div).find('p[class="Typography_root__487rx #585163 Typography_body-md__487rx event-card__clamp-line--one Typography_align-match-parent__487rx"]').text(),
+      group: "",
+      attendees: "",
+      price: $2(div).find('p[style="--TypographyColor: #3a3247;"]').text()
+    })).toArray();
   });
 }
 createRequire(import.meta.url);
