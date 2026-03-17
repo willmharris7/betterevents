@@ -1,11 +1,17 @@
-import { ipcMain, shell, BrowserWindow } from 'electron'
+import { ipcMain, shell, BrowserWindow} from 'electron'
 import * as cheerio from 'cheerio'
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Store from 'electron-store';
 dayjs.extend(customParseFormat);
+
+const store = new Store<{ blocklist: string[] }>();
 
 export function customFunctions() {
   ipcMain.handle('open-external', (_event, url: string) => shell.openExternal(url))
+
+  ipcMain.handle('get-blocklist', () => store.get('blocklist', []))
+  ipcMain.handle('set-blocklist', (_event, blocklist: string[]) => store.set('blocklist', blocklist))
 
   ipcMain.handle('fetchMeetup', async (_event, date: string, filterTime: string) => {
     const currentDay = new Date(date)

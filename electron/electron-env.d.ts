@@ -23,5 +23,8 @@ declare namespace NodeJS {
 
 // Used in Renderer process, expose in `preload.ts`
 interface Window {
-  ipcRenderer: import('electron').IpcRenderer
+  ipcRenderer: import('electron').IpcRenderer & {
+    getBlocklist: () => Promise<string[]>
+    setBlocklist: (blocklist: string[]) => Promise<void>
+  }
 }

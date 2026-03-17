@@ -17,6 +17,7 @@
     "@mui/x-date-pickers": "^8.27.2",
     "cheerio": "^1.0.0",
     "dayjs": "^1.11.20",
+    "electron-store": "^11.0.2",
     "immer": "^11.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

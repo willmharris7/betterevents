@@ -19,6 +19,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     return ipcRenderer.invoke(channel, ...omit)
   },
 
-  // You can expose other APTs you need here.
-  // ...
+  getBlocklist: () => ipcRenderer.invoke('get-blocklist'),
+  setBlocklist: (blocklist: string[]) => ipcRenderer.invoke('set-blocklist', blocklist),
 })
