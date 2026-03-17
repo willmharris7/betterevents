@@ -68,6 +68,12 @@ export function customFunctions() {
         attendees: '',
         price: $(div).find('p[style="--TypographyColor: #3a3247;"]').text(),
     })).toArray()
+    // Pagination text returns "1 of 13"
+    const numOfPages = parseInt($('li[class="Pagination-module__search-pagination__navigation-minimal___1eHd9"]').text().split(" ")[2])
+    for (let i = 2; i <= numOfPages; i++) {
+        console.log(i)
+    }
+
     const eventbriteCardDataFilteredTime = eventbriteCardData.filter(card => {
       const cardTimeAMPM = card.time.split('•')[1]
       const cardTimeDDHH = dayjs(cardTimeAMPM, "hh:mm A").format("HH:mm")
