@@ -43,7 +43,7 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack direction="row" spacing={2} sx={{ p: 1 }}>
           <DatePicker label="Date" value={dayjs(state.date)} onChange={(value: Dayjs | null) => {setState(draft => { draft.date = value ? value.format('YYYY-MM-DD') : '' }) }}/>
-          <TimePicker label="Time" value={dayjs(state.time, 'HH:mm')} onChange={(value: Dayjs | null) => { setState(draft => { draft.time = value ? value.format('HH:mm') : '' }) }}/>
+          <TimePicker label="Start Time" value={dayjs(state.time, 'HH:mm')} onChange={(value: Dayjs | null) => { setState(draft => { draft.time = value ? value.format('HH:mm') : '' }) }}/>
         </Stack>
       </LocalizationProvider>
       <Stack direction="row" spacing={2}>
@@ -59,10 +59,14 @@ function App() {
               <CardContent>
                 {event.img && <EventImage src={event.img} />}
                 <p>{event.title}</p>
-                {event.time && <p>{event.time}</p>}
+                {event.time && <p>{event.time}</p>} 
                 {event.group && <p>{event.group}</p>}
                 {event.attendees && <p>Attendees: {event.attendees}</p>}
                 <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
+                <div>
+                  <Button>Block Event</Button>
+                  <Button>Block Group</Button>
+                </div>
               </CardContent>
             </Card>
           </Grid>
