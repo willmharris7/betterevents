@@ -11,7 +11,7 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _a2, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _A, _B, _C, _D, _E, _F, _G, _H, _I, _J, _K, _L, _M, _N, _O, _P, _Q, _R, _dispatcher, _dispatch, _S, _T, _U, _validator, _encryptionKey, _encryptionAlgorithm, _options, _defaultValues, _isInMigration, _watcher, _watchFile, _debouncedChangeHandler, _Conf_instances, prepareOptions_fn, setupValidator_fn, captureSchemaDefaults_fn, applyDefaultValues_fn, configureSerialization_fn, resolvePath_fn, initializeStore_fn, runMigrations_fn;
-import electron, { ipcMain as ipcMain$1, shell as shell$1, BrowserWindow, app } from "electron";
+import electron, { ipcMain as ipcMain$1, shell as shell$1, BrowserWindow, app as app$1 } from "electron";
 import require$$0$5 from "node:stream";
 import require$$0$2 from "buffer";
 import require$$1$3 from "string_decoder";
@@ -57556,15 +57556,15 @@ runMigrations_fn = function(options) {
     __privateSet(this, _isInMigration, false);
   }
 };
-const { app: app$1, ipcMain, shell } = electron;
+const { app, ipcMain, shell } = electron;
 let isInitialized = false;
 const initDataListener = () => {
-  if (!ipcMain || !app$1) {
+  if (!ipcMain || !app) {
     throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
   }
   const appData = {
-    defaultCwd: app$1.getPath("userData"),
-    appVersion: app$1.getVersion()
+    defaultCwd: app.getPath("userData"),
+    appVersion: app.getVersion()
   };
   if (isInitialized) {
     return appData;
@@ -57585,7 +57585,7 @@ class ElectronStore extends Conf {
         throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
       }
       ({ defaultCwd, appVersion } = appData);
-    } else if (ipcMain && app$1) {
+    } else if (ipcMain && app) {
       ({ defaultCwd, appVersion } = initDataListener());
     }
     options = {
@@ -57614,9 +57614,10 @@ class ElectronStore extends Conf {
 }
 dayjs.extend(customParseFormat);
 const store = new ElectronStore();
+const defaultBlocklist = { meetupTitles: [], meetupGroups: [], eventbriteTitles: [] };
 function customFunctions() {
   ipcMain$1.handle("open-external", (_event, url) => shell$1.openExternal(url));
-  ipcMain$1.handle("get-blocklist", () => store.get("blocklist", []));
+  ipcMain$1.handle("get-blocklist", () => store.get("blocklist", defaultBlocklist));
   ipcMain$1.handle("set-blocklist", (_event, blocklist) => store.set("blocklist", blocklist));
   ipcMain$1.handle("fetchMeetup", async (_event, date, filterTime) => {
     const currentDay = new Date(date);
@@ -57662,9 +57663,7 @@ function customFunctions() {
     })).toArray();
     const eventbriteCardDataFiltered = eventbriteCardData.filter((card) => {
       const cardTimeAMPM = card.time.split("•")[1];
-      console.log(cardTimeAMPM);
       const cardTimeDDHH = dayjs(cardTimeAMPM, "hh:mm A").format("HH:mm");
-      console.log(cardTimeDDHH);
       return cardTimeDDHH >= filterTime;
     });
     return eventbriteCardDataFiltered;
@@ -57699,19 +57698,19 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
 }
-app.on("window-all-closed", () => {
+app$1.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    app.quit();
+    app$1.quit();
     win = null;
   }
 });
-app.on("activate", () => {
+app$1.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
 customFunctions();
-app.whenReady().then(createWindow);
+app$1.whenReady().then(createWindow);
 export {
   MAIN_DIST,
   RENDERER_DIST,

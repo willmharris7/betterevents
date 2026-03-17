@@ -20,5 +20,5 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   },
 
   getBlocklist: () => ipcRenderer.invoke('get-blocklist'),
-  setBlocklist: (blocklist: string[]) => ipcRenderer.invoke('set-blocklist', blocklist),
+  setBlocklist: (blocklist: { meetupTitles: string[]; meetupGroups: string[]; eventbriteTitles: string[] }) => ipcRenderer.invoke('set-blocklist', blocklist),
 })

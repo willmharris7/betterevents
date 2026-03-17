@@ -5,13 +5,21 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Store from 'electron-store';
 dayjs.extend(customParseFormat);
 
-const store = new Store<{ blocklist: string[] }>();
+interface Blocklist {
+  meetupTitles: string[]
+  meetupGroups: string[]
+  eventbriteTitles: string[]
+}
+
+const store = new Store<{ blocklist: Blocklist }>();
+
+const defaultBlocklist: Blocklist = { meetupTitles: [], meetupGroups: [], eventbriteTitles: [] }
 
 export function customFunctions() {
   ipcMain.handle('open-external', (_event, url: string) => shell.openExternal(url))
 
-  ipcMain.handle('get-blocklist', () => store.get('blocklist', []))
-  ipcMain.handle('set-blocklist', (_event, blocklist: string[]) => store.set('blocklist', blocklist))
+  ipcMain.handle('get-blocklist', () => store.get('blocklist', defaultBlocklist))
+  ipcMain.handle('set-blocklist', (_event, blocklist: Blocklist) => store.set('blocklist', blocklist))
 
   ipcMain.handle('fetchMeetup', async (_event, date: string, filterTime: string) => {
     const currentDay = new Date(date)
@@ -58,9 +66,7 @@ export function customFunctions() {
     })).toArray()
     const eventbriteCardDataFiltered = eventbriteCardData.filter(card => {
       const cardTimeAMPM = card.time.split('•')[1]
-      console.log(cardTimeAMPM)
       const cardTimeDDHH = dayjs(cardTimeAMPM, "hh:mm A").format("HH:mm")
-      console.log(cardTimeDDHH)
       return cardTimeDDHH >= filterTime
     })
     return eventbriteCardDataFiltered

@@ -64,8 +64,14 @@ function App() {
                 {event.attendees && <p>Attendees: {event.attendees}</p>}
                 <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
                 <div>
-                  <Button onClick={async () => { const current = await window.ipcRenderer.getBlocklist(); window.ipcRenderer.setBlocklist([...current, event.title]) }}>Block Event By Title</Button>
-                  <Button>Block Meetup Group</Button>
+                  <Button onClick={async () => { 
+                    const current = await window.ipcRenderer.getBlocklist(); 
+                    window.ipcRenderer.setBlocklist({ ...current, meetupTitles: [...current.meetupTitles, event.title] }) 
+                  }}>Block Event By Title</Button>
+                  <Button onClick={async () => { 
+                    const current = await window.ipcRenderer.getBlocklist(); 
+                    window.ipcRenderer.setBlocklist({ ...current, meetupGroups: [...current.meetupGroups, event.group] }) 
+                  }}>Block Meetup Group</Button>
                 </div>
               </CardContent>
             </Card>
@@ -83,6 +89,12 @@ function App() {
                 {event.time && <p>{event.time}</p>}
                 {event.price&& <p>{event.price}</p>}
                 <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
+                <div>
+                  <Button onClick={async () => { 
+                    const current = await window.ipcRenderer.getBlocklist();
+                    window.ipcRenderer.setBlocklist({ ...current, eventbriteTitles: [...current.eventbriteTitles, event.title] }) 
+                  }}>Block Event By Title</Button>
+                </div>
               </CardContent>
             </Card>
           </Grid>
