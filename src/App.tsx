@@ -22,7 +22,7 @@ function App() {
     meetupResults: [] as Event[],
     eventbriteResults: [] as Event[],
     checkboxes: { meetup: true, eventbrite: true },
-    date: '2026-03-21',
+    date: '2026-03-28',
     time: '00:00',
     blocklistOpen: false,
     blocklist: { meetupTitles: [] as string[], meetupGroups: [] as string[], eventbriteTitles: [] as string[] }

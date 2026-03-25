@@ -57667,7 +57667,24 @@ function customFunctions() {
     })).toArray();
     const numOfPages = parseInt($2('li[class="Pagination-module__search-pagination__navigation-minimal___1eHd9"]').text().split(" ")[2]);
     for (let i = 2; i <= numOfPages; i++) {
-      console.log(i);
+      const eventbriteURLNewPage = `https://www.eventbrite.com/d/or--portland/all-events/?page=${i}&start_date=${date}&end_date=${date}`;
+      console.log(eventbriteURLNewPage);
+      const winNew = new BrowserWindow({ show: false });
+      await winNew.loadURL(eventbriteURLNewPage);
+      await new Promise((resolve2) => setTimeout(resolve2, 6e3));
+      const eventbriteHTMLNewPage = await winNew.webContents.executeJavaScript("document.documentElement.outerHTML");
+      winNew.destroy();
+      const $22 = load(eventbriteHTMLNewPage);
+      const eventbriteCardDataNewPage = $22('div[class="Container_root__4i85v NestedActionContainer_root__1jtfr event-card event-card__horizontal horizontal-event-card__action-visibility"]').map((_i2, div) => ({
+        href: $22(div).find("a").attr("href"),
+        title: $22(div).find("h3").text(),
+        img: $22(div).find("img").attr("src"),
+        time: $22(div).find('p[class="Typography_root__487rx #585163 Typography_body-md__487rx event-card__clamp-line--one Typography_align-match-parent__487rx"]').first().text(),
+        group: "",
+        attendees: "",
+        price: $22(div).find('p[style="--TypographyColor: #3a3247;"]').text()
+      })).toArray();
+      eventbriteCardData.push(...eventbriteCardDataNewPage);
     }
     const eventbriteCardDataFilteredTime = eventbriteCardData.filter((card) => {
       const cardTimeAMPM = card.time.split("•")[1];
