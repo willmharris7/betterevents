@@ -1599,11 +1599,11 @@ function getAtomFeed(feedRoot) {
       if (href2) {
         entry.link = href2;
       }
-      const description2 = fetch$1("summary", children2) || fetch$1("content", children2);
+      const description2 = fetch("summary", children2) || fetch("content", children2);
       if (description2) {
         entry.description = description2;
       }
-      const pubDate = fetch$1("updated", children2);
+      const pubDate = fetch("updated", children2);
       if (pubDate) {
         entry.pubDate = new Date(pubDate);
       }
@@ -1617,7 +1617,7 @@ function getAtomFeed(feedRoot) {
     feed.link = href;
   }
   addConditionally(feed, "description", "subtitle", childs);
-  const updated = fetch$1("updated", childs);
+  const updated = fetch("updated", childs);
   if (updated) {
     feed.updated = new Date(updated);
   }
@@ -1637,7 +1637,7 @@ function getRssFeed(feedRoot) {
       addConditionally(entry, "title", "title", children2);
       addConditionally(entry, "link", "link", children2);
       addConditionally(entry, "description", "description", children2);
-      const pubDate = fetch$1("pubDate", children2) || fetch$1("dc:date", children2);
+      const pubDate = fetch("pubDate", children2) || fetch("dc:date", children2);
       if (pubDate)
         entry.pubDate = new Date(pubDate);
       return entry;
@@ -1646,7 +1646,7 @@ function getRssFeed(feedRoot) {
   addConditionally(feed, "title", "title", childs);
   addConditionally(feed, "link", "link", childs);
   addConditionally(feed, "description", "description", childs);
-  const updated = fetch$1("lastBuildDate", childs);
+  const updated = fetch("lastBuildDate", childs);
   if (updated) {
     feed.updated = new Date(updated);
   }
@@ -1690,11 +1690,11 @@ function getMediaElements(where) {
 function getOneElement(tagName, node) {
   return getElementsByTagName(tagName, node, true, 1)[0];
 }
-function fetch$1(tagName, where, recurse = false) {
+function fetch(tagName, where, recurse = false) {
   return textContent(getElementsByTagName(tagName, where, recurse, 1)).trim();
 }
 function addConditionally(obj, prop2, tagName, where, recurse = false) {
-  const val2 = fetch$1(tagName, where, recurse);
+  const val2 = fetch(tagName, where, recurse);
   if (val2)
     obj[prop2] = val2;
 }
@@ -57624,8 +57624,22 @@ function customFunctions() {
     currentDay.setDate(currentDay.getDate() + 1);
     const nextDay = currentDay.toISOString().split("T")[0];
     const meetupURL = `https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=${date}T03%3A00%3A00-04%3A00&customEndDate=${nextDay}T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles`;
-    const res = await fetch(meetupURL);
-    const meetupHTML = await res.text();
+    const win2 = new BrowserWindow({ show: false });
+    await win2.loadURL(meetupURL);
+    await new Promise((resolve2) => setTimeout(resolve2, 3e3));
+    let previousCount = 0;
+    while (true) {
+      const currentCount = await win2.webContents.executeJavaScript(
+        `document.querySelectorAll('a[data-event-label="Event Card"]').length`
+      );
+      if (currentCount === previousCount) break;
+      console.log("Meetup scroll, previous count:", previousCount);
+      previousCount = currentCount;
+      await win2.webContents.executeJavaScript("window.scrollTo(0, document.body.scrollHeight)");
+      await new Promise((resolve2) => setTimeout(resolve2, 2e3));
+    }
+    const meetupHTML = await win2.webContents.executeJavaScript("document.documentElement.outerHTML");
+    win2.destroy();
     const $2 = load(meetupHTML);
     const meetupCardData = $2('a[data-event-label="Event Card"]').map((_i2, a) => ({
       href: $2(a).attr("href"),

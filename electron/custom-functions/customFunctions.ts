@@ -26,8 +26,22 @@ export function customFunctions() {
     currentDay.setDate(currentDay.getDate() + 1)
     const nextDay = currentDay.toISOString().split('T')[0]
     const meetupURL = `https://www.meetup.com/find/?location=us--or--Portland&source=EVENTS&customStartDate=${date}T03%3A00%3A00-04%3A00&customEndDate=${nextDay}T02%3A59%3A59-04%3A00&eventType=inPerson&distance=twentyFiveMiles`
-    const res = await fetch(meetupURL)
-    const meetupHTML = await res.text()
+    const win = new BrowserWindow({ show: false })
+    await win.loadURL(meetupURL)
+    await new Promise(resolve => setTimeout(resolve, 3000))
+    let previousCount = 0
+    while (true) {
+      const currentCount = await win.webContents.executeJavaScript(
+        `document.querySelectorAll('a[data-event-label="Event Card"]').length`
+      )
+      if (currentCount === previousCount) break
+      console.log('Meetup scroll, previous count:', previousCount)
+      previousCount = currentCount
+      await win.webContents.executeJavaScript('window.scrollTo(0, document.body.scrollHeight)')
+      await new Promise(resolve => setTimeout(resolve, 2000))
+    }
+    const meetupHTML = await win.webContents.executeJavaScript('document.documentElement.outerHTML')
+    win.destroy()
     const $ = cheerio.load(meetupHTML)
     const meetupCardData = $('a[data-event-label="Event Card"]').map((_i, a) => ({
         href: $(a).attr('href'),
