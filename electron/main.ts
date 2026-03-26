@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from 'electron'
-import { customFunctions } from './custom-functions/customFunctions'
+import { Utils } from './utils'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -71,6 +71,6 @@ app.on('activate', () => {
   }
 })
 
-customFunctions()
+Utils()
 
 app.whenReady().then(createWindow)
