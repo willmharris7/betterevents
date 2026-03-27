@@ -2,9 +2,18 @@ import { Button, Card, CardContent, Grid } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useAppStore } from '../store'
 
+const ImageWrapper = styled('div')({
+  position: 'relative',
+  width: '100%',
+  paddingTop: '56.25%', // 16:9
+})
+
 const EventImage = styled('img')({
-  width: '375px',
-  height: '200px',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
   objectFit: 'cover',
 })
 
@@ -16,7 +25,7 @@ export default function MeetupCardGrid() {
         <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
           <Card>
             <CardContent>
-              {event.img && <EventImage src={event.img} />}
+              {event.img && <ImageWrapper><EventImage src={event.img} /></ImageWrapper>}
               <p>{event.title}</p>
               {event.time && <p>{event.time}</p>}
               {event.group && <p>{event.group}</p>}
