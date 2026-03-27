@@ -18,7 +18,7 @@ const EventImage = styled('img')({
 })
 
 export default function MeetupCardGrid() {
-  const { meetupResults } = useAppStore()
+  const { meetupResults, setMeetupResults } = useAppStore()
   return (
     <Grid container spacing={2}>
       {meetupResults.map((event, i) => (
@@ -36,10 +36,12 @@ export default function MeetupCardGrid() {
                 <Button onClick={async () => {
                   const current = await window.ipcRenderer.getBlocklist()
                   window.ipcRenderer.setBlocklist({ ...current, meetupTitles: [...current.meetupTitles, event.title] })
+                  setMeetupResults(meetupResults.filter(e => e.title !== event.title))
                 }}>Block Event By Title</Button>
                 <Button onClick={async () => {
                   const current = await window.ipcRenderer.getBlocklist()
                   window.ipcRenderer.setBlocklist({ ...current, meetupGroups: [...current.meetupGroups, event.group] })
+                  setMeetupResults(meetupResults.filter(e => e.group !== event.group))
                 }}>Block Meetup Group</Button>
               </div>
             </CardContent>

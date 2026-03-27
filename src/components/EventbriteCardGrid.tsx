@@ -18,7 +18,7 @@ const EventImage = styled('img')({
 })
 
 export default function EventbriteCardGrid() {
-  const { eventbriteResults } = useAppStore()
+  const { eventbriteResults, setEventbriteResults } = useAppStore()
   return (
     <Grid container spacing={2}>
       {eventbriteResults.map((event, i) => (
@@ -35,6 +35,7 @@ export default function EventbriteCardGrid() {
                 <Button onClick={async () => {
                   const current = await window.ipcRenderer.getBlocklist()
                   window.ipcRenderer.setBlocklist({ ...current, eventbriteTitles: [...current.eventbriteTitles, event.title] })
+                  setEventbriteResults(eventbriteResults.filter(e => e.title !== event.title))
                 }}>Block Event By Title</Button>
               </div>
             </CardContent>
