@@ -18,9 +18,7 @@ function App() {
         <WebsiteCheckboxes />
       </Stack>
       <BlocklistPopup />
-      <Divider/>
       <MeetupCardGrid />
-      <Divider/>
       <EventbriteCardGrid />
     </>
   )
