@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import dayjs from 'dayjs'
 
 interface Event { href: string; title: string; img: string; time: string; group: string; attendees: string; price: string }
 
@@ -31,7 +32,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   meetupResults: [],
   eventbriteResults: [],
   checkboxes: { meetup: true, eventbrite: true },
-  date: '2026-03-28',
+  date: dayjs().add(1, 'day').format('YYYY-MM-DD'),
   time: '00:00',
   blocklistOpen: false,
   blocklist: { meetupTitles: [], meetupGroups: [], eventbriteTitles: [] },
