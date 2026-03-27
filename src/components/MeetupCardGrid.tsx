@@ -26,7 +26,7 @@ export default function MeetupCardGrid() {
           <Card>
             <CardContent>
               {event.img && <ImageWrapper><EventImage src={event.img} /></ImageWrapper>}
-              <p>{event.title}</p>
+              <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{event.title}</p>
               {event.time && <p>{event.time}</p>}
               {event.group && <p>{event.group}</p>}
               {event.attendees && <p>Attendees: {event.attendees}</p>}

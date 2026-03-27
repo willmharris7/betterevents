@@ -26,7 +26,7 @@ export default function EventbriteCardGrid() {
           <Card>
             <CardContent>
               {event.img && <ImageWrapper><EventImage src={event.img} /></ImageWrapper>}
-              <p>{event.title}</p>
+              <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{event.title}</p>
               {event.time && <p>{event.time}</p>}
               {event.price && <p>{event.price}</p>}
               <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
