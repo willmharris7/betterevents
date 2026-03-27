@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Grid } from '@mui/material'
+import { Box, Button, Card, CardContent, CircularProgress, Grid } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { useAppStore } from '../store'
 
@@ -18,7 +18,8 @@ const EventImage = styled('img')({
 })
 
 export default function MeetupCardGrid() {
-  const { meetupResults, setMeetupResults } = useAppStore()
+  const { meetupResults, setMeetupResults, meetupLoading } = useAppStore()
+  if (meetupLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}><CircularProgress size={60} /></Box>
   return (
     <Grid container spacing={2}>
       {meetupResults.map((event, i) => (

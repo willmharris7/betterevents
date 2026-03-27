@@ -17,6 +17,8 @@ interface AppState {
   time: string
   blocklistOpen: boolean
   blocklist: Blocklist
+  meetupLoading: boolean
+  eventbriteLoading: boolean
 
   setDate: (date: string) => void
   setTime: (time: string) => void
@@ -26,6 +28,8 @@ interface AppState {
   setBlocklistOpen: (open: boolean) => void
   setBlocklist: (blocklist: Blocklist) => void
   removeBlocklistItem: (key: keyof Blocklist, index: number) => void
+  setMeetupLoading: (loading: boolean) => void
+  setEventbriteLoading: (loading: boolean) => void
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -36,6 +40,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   time: '00:00',
   blocklistOpen: false,
   blocklist: { meetupTitles: [], meetupGroups: [], eventbriteTitles: [] },
+  meetupLoading: false,
+  eventbriteLoading: false,
 
   setDate: (date) => set({ date }),
   setTime: (time) => set({ time }),
@@ -48,4 +54,6 @@ export const useAppStore = create<AppState>((set, get) => ({
     const blocklist = get().blocklist
     set({ blocklist: { ...blocklist, [key]: blocklist[key].filter((_, i) => i !== index) } })
   },
+  setMeetupLoading: (loading) => set({ meetupLoading: loading }),
+  setEventbriteLoading: (loading) => set({ eventbriteLoading: loading }),
 }))
