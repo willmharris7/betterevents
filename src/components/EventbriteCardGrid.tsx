@@ -25,7 +25,7 @@ export default function EventbriteCardGrid() {
         <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
           <Card>
             <CardContent>
-              <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }} onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')} onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}>
                 {event.img && <ImageWrapper><EventImage src={event.img} /></ImageWrapper>}
                 <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{event.title}</p>
               </a>
