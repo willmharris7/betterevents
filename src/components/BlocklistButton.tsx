@@ -5,8 +5,8 @@ export default function BlocklistButton() {
   const { setBlocklist, setBlocklistOpen } = useAppStore()
 
   async function openBlocklist() {
-    const current = await window.ipcRenderer.getBlocklist()
-    setBlocklist(current)
+    const blocklist = await window.ipcRenderer.getBlocklist()
+    setBlocklist(blocklist)
     setBlocklistOpen(true)
   }
 
