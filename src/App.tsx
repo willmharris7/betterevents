@@ -1,13 +1,10 @@
 import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox, Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import DatePicker from './components/DatePicker'
+import TimePicker from './components/TimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs, { Dayjs } from 'dayjs'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useAppStore } from './store'
-dayjs.extend(customParseFormat)
 
 const EventImage = styled('img')({
   width: '375px',
@@ -18,7 +15,7 @@ const EventImage = styled('img')({
 function App() {
   const {
     meetupResults, eventbriteResults, checkboxes, date, time, blocklistOpen, blocklist,
-    setTime, setMeetupResults, setEventbriteResults, toggleCheckbox,
+    setMeetupResults, setEventbriteResults, toggleCheckbox,
     setBlocklistOpen, setBlocklist, removeBlocklistItem,
   } = useAppStore()
 
@@ -50,7 +47,7 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack direction="row" spacing={2} sx={{ p: 1 }}>
           <DatePicker />
-          <TimePicker label="Start Time" value={dayjs(time, 'HH:mm')} onChange={(value: Dayjs | null) => setTime(value ? value.format('HH:mm') : '')} />
+          <TimePicker />
         </Stack>
       </LocalizationProvider>
       <Stack direction="row" spacing={2}>
