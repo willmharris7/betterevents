@@ -1,7 +1,6 @@
 import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox, Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import DatePicker from './components/DatePicker'
-import TimePicker from './components/TimePicker'
+import { DatePicker, TimePicker } from './components'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useAppStore } from './store'
