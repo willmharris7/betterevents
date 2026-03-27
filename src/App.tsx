@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox, Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { DatePicker, TimePicker } from './components'
+import { DatePicker, TimePicker, GetEventsButton } from './components'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useAppStore } from './store'
@@ -13,8 +13,8 @@ const EventImage = styled('img')({
 
 function App() {
   const {
-    meetupResults, eventbriteResults, checkboxes, date, time, blocklistOpen, blocklist,
-    setMeetupResults, setEventbriteResults, toggleCheckbox,
+    meetupResults, eventbriteResults, checkboxes, blocklistOpen, blocklist,
+    toggleCheckbox,
     setBlocklistOpen, setBlocklist, removeBlocklistItem,
   } = useAppStore()
 
@@ -30,17 +30,6 @@ function App() {
     await window.ipcRenderer.setBlocklist(updated)
   }
 
-  async function getEvents() {
-    if (checkboxes.meetup) {
-      const meetupFetchResponse = await window.ipcRenderer.invoke('fetchMeetup', date, time)
-      setMeetupResults(meetupFetchResponse)
-    }
-    if (checkboxes.eventbrite) {
-      const eventbriteFetchResponse = await window.ipcRenderer.invoke('fetchEventbrite', date, time)
-      setEventbriteResults(eventbriteFetchResponse)
-    }
-  }
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -50,7 +39,7 @@ function App() {
         </Stack>
       </LocalizationProvider>
       <Stack direction="row" spacing={2}>
-        <Button variant="contained" onClick={getEvents}>Get Events</Button>
+        <GetEventsButton />
         <Button variant="outlined" onClick={openBlocklist}>Blocklist</Button>
         <FormControlLabel control={<Checkbox checked={checkboxes.meetup} onChange={() => toggleCheckbox('meetup')} />} label="Meetup" />
         <FormControlLabel control={<Checkbox checked={checkboxes.eventbrite} onChange={() => toggleCheckbox('eventbrite')} />} label="Eventbrite" />
