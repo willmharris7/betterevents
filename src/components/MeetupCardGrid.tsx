@@ -25,12 +25,13 @@ export default function MeetupCardGrid() {
         <Grid key={i} size={{ xs: 12, sm: 6, md: 4 }}>
           <Card>
             <CardContent>
-              {event.img && <ImageWrapper><EventImage src={event.img} /></ImageWrapper>}
-              <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{event.title}</p>
+              <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                {event.img && <ImageWrapper><EventImage src={event.img} /></ImageWrapper>}
+                <p style={{ fontWeight: 'bold', fontSize: '1.3rem' }}>{event.title}</p>
+              </a>
               {event.time && <p>{event.time}</p>}
               {event.group && <p>{event.group}</p>}
               {event.attendees && <p>Attendees: {event.attendees}</p>}
-              <a href="#" onClick={e => { e.preventDefault(); window.ipcRenderer.invoke('open-external', event.href) }}>Link</a>
               <div>
                 <Button onClick={async () => {
                   const current = await window.ipcRenderer.getBlocklist()
