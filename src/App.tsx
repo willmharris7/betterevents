@@ -1,6 +1,6 @@
-import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox, Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
+import { Button, Card, CardContent, Grid, Divider, Stack, Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { DatePicker, TimePicker, GetEventsButton, BlocklistButton } from './components'
+import { DatePicker, TimePicker, GetEventsButton, BlocklistButton, WebsiteCheckboxes } from './components'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useAppStore } from './store'
@@ -13,8 +13,7 @@ const EventImage = styled('img')({
 
 function App() {
   const {
-    meetupResults, eventbriteResults, checkboxes, blocklistOpen, blocklist,
-    toggleCheckbox,
+    meetupResults, eventbriteResults, blocklistOpen, blocklist,
     setBlocklistOpen, removeBlocklistItem,
   } = useAppStore()
 
@@ -35,8 +34,7 @@ function App() {
       <Stack direction="row" spacing={2}>
         <GetEventsButton />
         <BlocklistButton />
-        <FormControlLabel control={<Checkbox checked={checkboxes.meetup} onChange={() => toggleCheckbox('meetup')} />} label="Meetup" />
-        <FormControlLabel control={<Checkbox checked={checkboxes.eventbrite} onChange={() => toggleCheckbox('eventbrite')} />} label="Eventbrite" />
+        <WebsiteCheckboxes />
       </Stack>
       <Dialog open={blocklistOpen} onClose={() => setBlocklistOpen(false)}>
         <DialogTitle>Blocklist</DialogTitle>
