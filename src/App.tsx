@@ -1,4 +1,4 @@
-import { Divider, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import { DatePicker, TimePicker, GetEventsButton, BlocklistButton, WebsiteCheckboxes, BlocklistPopup, MeetupCardGrid, EventbriteCardGrid } from './components'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -7,16 +7,14 @@ function App() {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack direction="row" spacing={2} sx={{ p: 1 }}>
+        <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap justifyContent="center" alignItems="center" sx={{ p: 1, pt: 5 }}>
+          <GetEventsButton />
+          <BlocklistButton />
           <DatePicker />
           <TimePicker />
+          <WebsiteCheckboxes />
         </Stack>
       </LocalizationProvider>
-      <Stack direction="row" spacing={2}>
-        <GetEventsButton />
-        <BlocklistButton />
-        <WebsiteCheckboxes />
-      </Stack>
       <BlocklistPopup />
       <MeetupCardGrid />
       <EventbriteCardGrid />
