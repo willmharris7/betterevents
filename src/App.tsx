@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, Grid, Divider, Stack, FormControlLabel, Checkbox, Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { DatePicker, TimePicker, GetEventsButton } from './components'
+import { DatePicker, TimePicker, GetEventsButton, BlocklistButton } from './components'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useAppStore } from './store'
@@ -15,14 +15,8 @@ function App() {
   const {
     meetupResults, eventbriteResults, checkboxes, blocklistOpen, blocklist,
     toggleCheckbox,
-    setBlocklistOpen, setBlocklist, removeBlocklistItem,
+    setBlocklistOpen, removeBlocklistItem,
   } = useAppStore()
-
-  async function openBlocklist() {
-    const current = await window.ipcRenderer.getBlocklist()
-    setBlocklist(current)
-    setBlocklistOpen(true)
-  }
 
   async function handleRemoveBlocklistItem(key: 'meetupTitles' | 'meetupGroups' | 'eventbriteTitles', index: number) {
     removeBlocklistItem(key, index)
@@ -40,7 +34,7 @@ function App() {
       </LocalizationProvider>
       <Stack direction="row" spacing={2}>
         <GetEventsButton />
-        <Button variant="outlined" onClick={openBlocklist}>Blocklist</Button>
+        <BlocklistButton />
         <FormControlLabel control={<Checkbox checked={checkboxes.meetup} onChange={() => toggleCheckbox('meetup')} />} label="Meetup" />
         <FormControlLabel control={<Checkbox checked={checkboxes.eventbrite} onChange={() => toggleCheckbox('eventbrite')} />} label="Eventbrite" />
       </Stack>
