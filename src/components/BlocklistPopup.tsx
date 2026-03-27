@@ -1,4 +1,5 @@
-import { Dialog, DialogTitle, DialogContent, Typography, Box, Chip } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Dialog, DialogTitle, DialogContent, Box, Chip, Typography } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useAppStore } from '../store'
 
 export default function BlocklistPopup() {
@@ -14,24 +15,42 @@ export default function BlocklistPopup() {
     <Dialog open={blocklistOpen} onClose={() => setBlocklistOpen(false)}>
       <DialogTitle sx={{ fontSize: '2.2rem' }}>Blocklist</DialogTitle>
       <DialogContent>
-        <Typography sx={{ fontSize: '1.6rem' }}  >Meetup Titles</Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-          {blocklist.meetupTitles.map((title, i) => (
-            <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('meetupTitles', i)} sx={{ fontSize: '1.1rem' }} />
-          ))}
-        </Box>
-        <Typography sx={{ fontSize: '1.6rem' }} >Meetup Groups</Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-          {blocklist.meetupGroups.map((group, i) => (
-            <Chip key={i} label={group} onDelete={() => handleRemoveBlocklistItem('meetupGroups', i)} sx={{ fontSize: '1.1rem' }} />
-          ))}
-        </Box>
-        <Typography sx={{ fontSize: '1.6rem' }} >Eventbrite Titles</Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {blocklist.eventbriteTitles.map((title, i) => (
-            <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('eventbriteTitles', i)} sx={{ fontSize: '1.1rem' }} />
-          ))}
-        </Box>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography sx={{ fontSize: '1.6rem' }}>Meetup Titles</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {blocklist.meetupTitles.map((title, i) => (
+                <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('meetupTitles', i)} sx={{ fontSize: '1.1rem' }} />
+              ))}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography sx={{ fontSize: '1.6rem' }}>Meetup Groups</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {blocklist.meetupGroups.map((group, i) => (
+                <Chip key={i} label={group} onDelete={() => handleRemoveBlocklistItem('meetupGroups', i)} sx={{ fontSize: '1.1rem' }} />
+              ))}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography sx={{ fontSize: '1.6rem' }}>Eventbrite Titles</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {blocklist.eventbriteTitles.map((title, i) => (
+                <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('eventbriteTitles', i)} sx={{ fontSize: '1.1rem' }} />
+              ))}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
       </DialogContent>
     </Dialog>
   )
