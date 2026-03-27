@@ -5,7 +5,7 @@ import { useAppStore } from '../store'
 export default function BlocklistPopup() {
   const { blocklistOpen, blocklist, setBlocklistOpen, removeBlocklistItem } = useAppStore()
 
-  async function handleRemoveBlocklistItem(key: 'meetupTitles' | 'meetupGroups' | 'eventbriteTitles', index: number) {
+  async function removeBlocklistItemFromStoreAndState(key: 'meetupTitles' | 'meetupGroups' | 'eventbriteTitles', index: number) {
     removeBlocklistItem(key, index)
     const updated = useAppStore.getState().blocklist
     await window.ipcRenderer.setBlocklist(updated)
@@ -22,7 +22,7 @@ export default function BlocklistPopup() {
           <AccordionDetails>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {blocklist.meetupTitles.map((title, i) => (
-                <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('meetupTitles', i)} sx={{ fontSize: '1.1rem' }} />
+                <Chip key={i} label={title} onDelete={() => removeBlocklistItemFromStoreAndState('meetupTitles', i)} sx={{ fontSize: '1.1rem' }} />
               ))}
             </Box>
           </AccordionDetails>
@@ -34,7 +34,7 @@ export default function BlocklistPopup() {
           <AccordionDetails>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {blocklist.meetupGroups.map((group, i) => (
-                <Chip key={i} label={group} onDelete={() => handleRemoveBlocklistItem('meetupGroups', i)} sx={{ fontSize: '1.1rem' }} />
+                <Chip key={i} label={group} onDelete={() => removeBlocklistItemFromStoreAndState('meetupGroups', i)} sx={{ fontSize: '1.1rem' }} />
               ))}
             </Box>
           </AccordionDetails>
@@ -46,7 +46,7 @@ export default function BlocklistPopup() {
           <AccordionDetails>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {blocklist.eventbriteTitles.map((title, i) => (
-                <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('eventbriteTitles', i)} sx={{ fontSize: '1.1rem' }} />
+                <Chip key={i} label={title} onDelete={() => removeBlocklistItemFromStoreAndState('eventbriteTitles', i)} sx={{ fontSize: '1.1rem' }} />
               ))}
             </Box>
           </AccordionDetails>
