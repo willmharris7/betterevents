@@ -12,24 +12,24 @@ export default function BlocklistPopup() {
 
   return (
     <Dialog open={blocklistOpen} onClose={() => setBlocklistOpen(false)}>
-      <DialogTitle>Blocklist</DialogTitle>
+      <DialogTitle sx={{ fontSize: '2.2rem' }}>Blocklist</DialogTitle>
       <DialogContent>
-        <Typography variant="subtitle2">Meetup Titles</Typography>
+        <Typography sx={{ fontSize: '1.6rem' }}  >Meetup Titles</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
           {blocklist.meetupTitles.map((title, i) => (
-            <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('meetupTitles', i)} />
+            <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('meetupTitles', i)} sx={{ fontSize: '1.1rem' }} />
           ))}
         </Box>
-        <Typography variant="subtitle2">Meetup Groups</Typography>
+        <Typography sx={{ fontSize: '1.6rem' }} >Meetup Groups</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
           {blocklist.meetupGroups.map((group, i) => (
-            <Chip key={i} label={group} onDelete={() => handleRemoveBlocklistItem('meetupGroups', i)} />
+            <Chip key={i} label={group} onDelete={() => handleRemoveBlocklistItem('meetupGroups', i)} sx={{ fontSize: '1.1rem' }} />
           ))}
         </Box>
-        <Typography variant="subtitle2">Eventbrite Titles</Typography>
+        <Typography sx={{ fontSize: '1.6rem' }} >Eventbrite Titles</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           {blocklist.eventbriteTitles.map((title, i) => (
-            <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('eventbriteTitles', i)} />
+            <Chip key={i} label={title} onDelete={() => handleRemoveBlocklistItem('eventbriteTitles', i)} sx={{ fontSize: '1.1rem' }} />
           ))}
         </Box>
       </DialogContent>
