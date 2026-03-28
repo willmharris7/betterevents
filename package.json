@@ -6,6 +6,10 @@
   "build": {
     "appId": "com.willharris.betterevents",
     "productName": "BetterEvents",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
     "mac": {
       "target": "dmg"
     },
