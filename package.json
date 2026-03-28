@@ -3,11 +3,26 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "build": {
+    "appId": "com.willharris.betterevents",
+    "productName": "BetterEvents",
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
